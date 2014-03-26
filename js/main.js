@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	//usa: https://github.com/jhuckaby/webcamjs
-	
+
 	//configura el plugin
 	Webcam.set({
 		image_format: 'jpeg',
@@ -20,6 +20,7 @@ $(document).ready(function(){
 			'<h2>captura</h2>' + '<img src="'+data_uri+'"/>'
 		) 
 	}
+	
 
 	// al presionar el boton toma la imagen
 	$('#capture').click(function(){

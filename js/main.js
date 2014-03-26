@@ -1,106 +1,28 @@
-//cuando el documento este listo
-$(document).ready(
-	function () {
-		// esto es lo que va a hacer
-		//me saluda
-		console.log("hola");
+$(document).ready(function(){
+	//usa: https://github.com/jhuckaby/webcamjs
+	
+	//configura el plugin
+	Webcam.set({
+		image_format: 'jpeg',
+		jpeg_quality: 90
+	});
 
-		// selecciono el elemento
-		var boton = $("#elBoton");
+	//muestra la imagen en la division
+	Webcam.attach( '#my_camera' );
 
-		//escucho el evento click
-		boton.click(function(){
-			// esto lo ejecuto cuando hacen click
-			console.log("touch");
-            
-            // selecciona el elemento del texto
-			var texto = $("#elTexto");
-			/**
- * @license jQuery webcam plugin v1.0 09/12/2010
- * http://www.xarg.org/project/jquery-webcam-plugin/
- *
- * Copyright (c) 2010, Robert Eisele (robert@xarg.org)
- * Dual licensed under the MIT or GPL Version 2 licenses.
- **/
+	//funcion para tomar la imagen
+	function take_snapshot() {
+		// toma la imagen
+		var data_uri = Webcam.snap();
 
-(function ($) {
-
-    var webcam = {
-
-	extern: null, // external select token to support jQuery dialogs
-	append: true, // append object instead of overwriting
-
-	width: 320,
-	height: 240,
-
-	mode: "callback", // callback | save | stream
-
-	swffile: "jscam.swf",
-	quality: 85,
-
-	debug:	    function () {},
-	onCapture:  function () {},
-	onTick:	    function () {},
-	onSave:	    function () {},
-	onLoad:	    function () {}
-    };
-
-    window.webcam = webcam;
-
-    $.fn.webcam = function(options) {
-
-	if (typeof options === "object") {
-	    for (var ndx in webcam) {
-		if (options[ndx] !== undefined) {
-		    webcam[ndx] = options[ndx];
-		}
-	    }
+		// injecta el resultado
+		$('#results').html(
+			'<h2>captura</h2>' + '<img src="'+data_uri+'"/>'
+		) 
 	}
 
-	var source = '<object id="XwebcamXobjectX" type="application/x-shockwave-flash" data="'+webcam.swffile+'" width="'+webcam.width+'" height="'+webcam.height+'"><param name="movie" value="'+webcam.swffile+'" /><param name="FlashVars" value="mode='+webcam.mode+'&amp;quality='+webcam.quality+'" /><param name="allowScriptAccess" value="always" /></object>';
-
-	if (null !== webcam.extern) {
-	    $(webcam.extern)[webcam.append ? "append" : "html"](source);
-	} else {
-	    this[webcam.append ? "append" : "html"](source);
-	}
-
-	(_register = function(run) {
-
-	    var cam = document.getElementById('XwebcamXobjectX');
-
-	    if (cam.capture !== undefined) {
-
-		/* Simple callback methods are not allowed :-/ */
-		webcam.capture = function(x) {
-		    try {
-			return cam.capture(x);
-		    } catch(e) {}
-		}
-		webcam.save = function(x) {
-		    try {
-			return cam.save(x);
-		    } catch(e) {}
-		}
-		webcam.setCamera = function(x) {
-		    try {
-			return cam.setCamera(x);
-		    } catch(e) {}
-		}
-		webcam.getCameraList = function() {
-		    try {
-			return cam.getCameraList();
-		    } catch(e) {}
-		}
-
-		webcam.onLoad();
-	    } else if (0 == run) {
-		webcam.debug("error", "Flash movie not yet registered!");
-	    } else {
-		/* Flash interface not ready yet */
-		window.setTimeout(_register, 1000 * (4 - run), run - 1);
-	    }
-	})(3);
-    }
-
-})(jQuery);
+	// al presionar el boton toma la imagen
+	$('#capture').click(function(){
+		take_snapshot()
+	})
+})
